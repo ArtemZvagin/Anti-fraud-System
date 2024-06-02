@@ -14,3 +14,9 @@
     - Строк где customer_id -9999(Видимо это значение использовали когда customer_id был неизвестен) 
 
 2. Сохранил обработанные данные в s3a://otus-course/prepared_data.parquet 
+
+## Homework 4
+
+1. Подготовил Airflow [даг](prepare_data/data_proc_dag.py) для запуска переодической очистки данных.
+2. Запустил и протестировал даг
+![](results/data_preparation_dag.jpg)
