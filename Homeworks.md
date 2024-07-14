@@ -20,3 +20,14 @@
 1. Подготовил Airflow [даг](prepare_data/data_proc_dag.py) для запуска переодической очистки данных.
 2. Запустил и протестировал даг
 ![](results/data_preparation_dag.jpg)
+
+
+## Homework 5
+
+1. Поднял все компоненты MLFlow(Tracker server, postgesql, s3 storage).
+2. Запустил Airflow [даг](homework5/DAG_refit.py). Этот даг будет создавать кластер, запускать [скрипт](homework5/train.py) для обучения модели и логирования результатов в MLFlow, после этого удалять кластер.
+
+### **Даг отработал**
+![](homework5/airflow_result.jpg)
+### **Результаты залогировались**
+![](homework5/mlflow_result.jpg)
