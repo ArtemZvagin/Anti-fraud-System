@@ -31,3 +31,12 @@
 ![](homework5/airflow_result.jpg)
 ### **Результаты залогировались**
 ![](homework5/mlflow_result.jpg)
+
+
+## Homework 6
+
+В скрипты([main.py](homework6/main.py), [train_model.py](homework6/train_model.py)) из прошлого задания, добавил код который загружает лучшую старую модель, и сравнивает качество моделей на бутстреп выборках с помощью Т-теста.
+
+### **Результаты в MLFLow**
+
+![](homework6/mlflow_result.jpg)
