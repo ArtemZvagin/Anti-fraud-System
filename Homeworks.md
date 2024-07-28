@@ -40,3 +40,10 @@
 ### **Результаты в MLFLow**
 
 ![](homework6/mlflow_result.jpg)
+
+
+## Homework 7
+Поднял Kafka, написал [producer.py](homework7/producer.py) и [consumer.py](homework7/consumer.py) для инференса на потоке. Протестировал производительность.
+
+### **Kafka UI**
+![](homework7/kafka_ui.jpg)
