@@ -8,50 +8,54 @@ from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.ml import Pipeline
 from pyspark.ml.tuning import TrainValidationSplit, ParamGridBuilder
 
-class FeatureCreator(Transformer, ml.util.DefaultParamsWritable, ml.util.DefaultParamsReadable):
+
+class FeatureCreator(
+    Transformer, ml.util.DefaultParamsWritable, ml.util.DefaultParamsReadable
+):
     """
     A custom Transformer which create new features
     """
-    
+
     def _transform(self, df: DataFrame) -> DataFrame:
-        df = df.withColumn('hour', hour(df.tx_datetime))
-        df = df.withColumn('time_of_day', (df['hour'] / 6).cast('integer'))
-        return df  
-    
+        df = df.withColumn("hour", hour(df.tx_datetime))
+        df = df.withColumn("time_of_day", (df["hour"] / 6).cast("integer"))
+        return df
+
 
 def train_model(df: DataFrame):
     feature_creator = FeatureCreator()
 
-    catColumns = ['time_of_day']
-    outputCatColumns = [col + '_ohe' for col in catColumns]
+    catColumns = ["time_of_day"]
+    outputCatColumns = [col + "_ohe" for col in catColumns]
     encoder = OneHotEncoder(inputCols=catColumns, outputCols=outputCatColumns)
 
+    numericColumns = ["tx_amount", "terminal_id", "hour"]
+    assembler = VectorAssembler(
+        inputCols=numericColumns + outputCatColumns, outputCol="features"
+    )
 
-    numericColumns = ['tx_amount', 'terminal_id', 'hour']
-    assembler = VectorAssembler(inputCols=numericColumns + outputCatColumns, outputCol='features')
-
-
-    scaler = StandardScaler(inputCol='features', outputCol='scaled_features')
+    scaler = StandardScaler(inputCol="features", outputCol="scaled_features")
     model = GBTClassifier(labelCol="tx_fraud", featuresCol="scaled_features")
 
     pipeline = Pipeline(stages=[feature_creator, encoder, assembler, scaler, model])
 
-
-    paramGrid = ParamGridBuilder()\
-        .addGrid(model.maxDepth, [5, 10])\
-        .addGrid(model.maxIter, [10, 20, 30])\
-        .addGrid(model.subsamplingRate, [0.5, 0.7, 1])\
+    paramGrid = (
+        ParamGridBuilder()
+        .addGrid(model.maxDepth, [5, 10])
+        .addGrid(model.maxIter, [10, 20, 30])
+        .addGrid(model.subsamplingRate, [0.5, 0.7, 1])
         .build()
-
+    )
 
     tvs = TrainValidationSplit(
         estimator=pipeline,
         estimatorParamMaps=paramGrid,
-        evaluator=BinaryClassificationEvaluator(metricName='areaUnderROC', labelCol='tx_fraud'),
+        evaluator=BinaryClassificationEvaluator(
+            metricName="areaUnderROC", labelCol="tx_fraud"
+        ),
         trainRatio=0.8,
-        seed=42
+        seed=42,
     )
-
 
     tvs_model = tvs.fit(df)
 
@@ -62,12 +66,17 @@ def train_model(df: DataFrame):
     val_metrics_and_params.sort(key=lambda x: x[0], reverse=True)
     best_val_metric, best_params = val_metrics_and_params[0]
 
-    return {'val_metric': best_val_metric, 'params': best_params, 'model': tvs_model.bestModel}
+    return {
+        "val_metric": best_val_metric,
+        "params": best_params,
+        "model": tvs_model.bestModel,
+    }
 
 
-
-def compute_bootstrap_metric(predictions: DataFrame, n_bootstraps: int=100) -> list:
-    evaluator = BinaryClassificationEvaluator(metricName='areaUnderROC').setLabelCol('tx_fraud')
+def compute_bootstrap_metric(predictions: DataFrame, n_bootstraps: int = 100) -> list:
+    evaluator = BinaryClassificationEvaluator(metricName="areaUnderROC").setLabelCol(
+        "tx_fraud"
+    )
 
     metric = []
     for _ in range(n_bootstraps):

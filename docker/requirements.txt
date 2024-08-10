@@ -1,4 +1,9 @@
 fastapi==0.108.0 
 uvicorn==0.25.0
+black==22.3.0
+pylint==2.9.3
+pyflakes==3.2.0
+
 numpy
+pyspark
 findspark
