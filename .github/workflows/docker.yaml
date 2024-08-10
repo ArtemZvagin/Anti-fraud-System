@@ -19,17 +19,16 @@ jobs:
           
       - name: Install dependencies
         run: |
-          cd docker
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r docker/requirements.txt
           
       - name: Check PEP8 compliance
         run: |
-          black --check -v .
+          black --check -v docker/
           
       - name: Lint with pyflakes
         run: |
-          pyflakes .
+          pyflakes docker/
           
       - name: Unit tests with pytest
         run: echo "Here we need to run unit tests"
