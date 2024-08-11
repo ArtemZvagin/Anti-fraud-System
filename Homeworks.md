@@ -47,3 +47,14 @@
 
 ### **Kafka UI**
 ![](homework7/kafka_ui.jpg)
+
+
+## Homework 8. Docker and K8s.
+- Обернул модельку в сервис с помощью FastAPI
+- Подготовил Dockerfile для сборки образа
+- Настроил github actions для автоматической проверки кода, сбора и сохранения образа на docker hub
+- Написал манифесты для деплоя сервиса на кластере Kubernetes
+- Протестировал:)
+
+#### Результаты.
+[Код сервиса](docker/), [Yaml-файл для Github Actions](.github/workflows/docker.yaml), [Манифесты](k8s/)

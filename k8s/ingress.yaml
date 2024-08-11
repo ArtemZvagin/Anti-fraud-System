@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Exact
+        path: /
+        backend:
+          service:
+            name: antifraud-service
+            port:
+              number: 80
+      - pathType: Exact
+        path: /predict
+        backend:
+          service:
+            name: antifraud-service
+            port:
+              number: 80

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: antifraud-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: antifraud
+  template:
+    metadata:
+      labels:
+        app: antifraud
+    spec:
+      containers:
+      - name: antifraud-api
+        image: artemzvagin/antifraud:latest
+        ports:
+        - containerPort: 8080
+
+        envFrom:
+        - secretRef:
+            name: antifraud-secret
